@@ -1,0 +1,13 @@
+
+node_modules/
+.env
+.env.local
+dist/
+data/*.json
+!data/queries.csv
+
+.DS_Store
+.idea/
+.vscode/
+*.log
+
