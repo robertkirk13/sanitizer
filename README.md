@@ -52,3 +52,18 @@ query,category,expected
 Find capacitor,core_domain,PASS
 Write code,adjacent_domain,BLOCK
 ```
+
+## Results
+
+Block rates on 200 queries (PCB component search scope):
+
+| Query Type | Prompting | Keywords | Ours |
+|------------|-----------|----------|------|
+| Core (want low) | 0% | 6% | 1% |
+| Adjacent | 0% | 30% | 96% |
+| General | 0% | 18% | 99% |
+| Adversarial | 0% | 64% | 98% |
+
+- FPR: 0% / 6% / 1%
+- Leakage: 100% / 63% / 2%
+- Latency: ~25ms / ~0ms / ~200ms
