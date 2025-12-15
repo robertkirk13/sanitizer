@@ -18,8 +18,13 @@ async function main() {
 
 	console.log("\nDemo\n" + "=".repeat(50));
 	for (const [q, want] of tests) {
-		const [a, b, c] = await Promise.all([sys.classify(q), kw.classify(q), san.classify(q)]);
-		console.log(`\n"${q}"\nWant: ${want} | Sys: ${a.decision} ${a.decision === want ? "✓" : "✗"} | KW: ${b.decision} ${b.decision === want ? "✓" : "✗"} | San: ${c.decision} ${c.decision === want ? "✓" : "✗"}`);
+		const [a, b, c] = await Promise.all([
+			sys.classify(q), 
+			kw.classify(q), 
+			san.classify(q)
+		]);
+		const check = (d: string) => d === want ? "✓" : "✗";
+		console.log(`\n"${q}"\nWant: ${want} | Sys: ${a.decision} ${check(a.decision)} | KW: ${b.decision} ${check(b.decision)} | San: ${c.decision} ${check(c.decision)}`);
 	}
 	console.log("\n" + "=".repeat(50));
 }

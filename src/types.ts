@@ -14,6 +14,8 @@ export interface SanitizeResult {
 	confidence: number;
 	reasoning: string;
 	latencyMs: number;
+	tokensUsed?: number;
+	estimatedCostUsd?: number;
 }
 
 export interface RefusalResponse {
@@ -43,6 +45,9 @@ export interface EvaluationResult {
 		falsePositiveRate: number;
 		leakageRate: number;
 		avgLatencyMs: number;
+		totalTokens: number;
+		totalCostUsd: number;
+		costPer1000Queries: number;
 	};
 }
 

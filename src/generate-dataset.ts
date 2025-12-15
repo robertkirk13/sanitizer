@@ -29,10 +29,10 @@ export async function saveDataset(path: string) {
 	const data = await generateDataset();
 	await Bun.write(path, JSON.stringify(data, null, 2));
 
-	const c = data.filter((d) => d.category === "core_domain").length;
-	const a = data.filter((d) => d.category === "adjacent_domain").length;
-	const g = data.filter((d) => d.category === "general_chat").length;
-	const x = data.filter((d) => d.category === "adversarial").length;
+	const c = data.filter(d => d.category === "core_domain").length;
+	const a = data.filter(d => d.category === "adjacent_domain").length;
+	const g = data.filter(d => d.category === "general_chat").length;
+	const x = data.filter(d => d.category === "adversarial").length;
 
 	console.log(`\nLoaded ${data.length} queries from ${CSV_PATH}`);
 	console.log(`  Core: ${c}, Adjacent: ${a}, General: ${g}, Adversarial: ${x}`);
