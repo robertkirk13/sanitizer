@@ -8,6 +8,8 @@ import type {
 	SanitizeOptions,
 } from "./types";
 
+//
+
 const openrouter = createOpenAICompatible({
 	name: "openrouter",
 	baseURL: "https://openrouter.ai/api/v1",
@@ -33,10 +35,13 @@ export class InputSanitizer {
 		this.model = model;
 	}
 
-	async classify(query: string, opts: SanitizeOptions = {}): Promise<SanitizeResult> {
+	async classify(
+		query: string,
+		opts: SanitizeOptions = {},
+	): Promise<SanitizeResult> {
 		const t0 = performance.now();
 		const sys = this.prompt();
-		
+
 		try {
 			const { object: o, usage } = await generateObject({
 				model: openrouter(this.model),
@@ -45,14 +50,16 @@ export class InputSanitizer {
 				prompt: `Classify: "${query}"`,
 				temperature: 0.1,
 			});
-			
-			const inToks = usage?.promptTokens ?? Math.ceil((sys.length + query.length) / 4);
-			const outToks = usage?.completionTokens ?? Math.ceil(JSON.stringify(o).length / 4);
-			const total = usage?.totalTokens ?? (inToks + outToks);
-			
+
+			const inToks =
+				usage?.promptTokens ?? Math.ceil((sys.length + query.length) / 4);
+			const outToks =
+				usage?.completionTokens ?? Math.ceil(JSON.stringify(o).length / 4);
+			const total = usage?.totalTokens ?? inToks + outToks;
+
 			// gemini pricing
-			const cost = (inToks * 0.10 + outToks * 0.40) / 1_000_000;
-			
+			const cost = (inToks * 0.1 + outToks * 0.4) / 1_000_000;
+
 			return {
 				decision: o.prob >= (opts.threshold ?? 0.5) ? "PASS" : "BLOCK",
 				confidence: o.prob,
@@ -68,7 +75,7 @@ export class InputSanitizer {
 				reasoning: e instanceof Error ? e.message : "error",
 				latencyMs: Math.round(performance.now() - t0),
 				tokensUsed: 0,
-				estimatedCostUsd: 0
+				estimatedCostUsd: 0,
 			};
 		}
 	}
@@ -88,7 +95,10 @@ export class InputSanitizer {
 		}
 	}
 
-	async sanitize(query: string, opts: SanitizeOptions = {}): Promise<SanitizeResult & { refusal?: RefusalResponse }> {
+	async sanitize(
+		query: string,
+		opts: SanitizeOptions = {},
+	): Promise<SanitizeResult & { refusal?: RefusalResponse }> {
 		const r = await this.classify(query, opts);
 		if (r.decision === "BLOCK" && opts.generateRefusal) {
 			return { ...r, refusal: await this.generateRefusal(query) };

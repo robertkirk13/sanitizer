@@ -9,6 +9,7 @@ export interface ScopeDefinition {
 	};
 }
 
+//
 export interface SanitizeResult {
 	decision: "PASS" | "BLOCK";
 	confidence: number;
